@@ -201,6 +201,16 @@ class WP_Post_Modal_Admin
             array('label_for' => $this->option_name . '_styling')
         );
 
+        // Activate styling
+        add_settings_field(
+            $this->option_name . '_load_stylesheet',
+            __('Load modal stylesheet', 'wp-post-modal'),
+            array($this, $this->option_name . '_load_stylesheet_cb'),
+            $this->plugin_name,
+            $this->option_name . '_general',
+            array('label_for' => $this->option_name . '_load_stylesheet')
+        );
+
         // Disable body scrolling
         add_settings_field(
             $this->option_name . '_scrolling',
@@ -301,6 +311,10 @@ class WP_Post_Modal_Admin
         register_setting($this->plugin_name, $this->option_name . '_styling', array(
             $this,
             $this->option_name . '_sanitize_styling',
+        ));
+        register_setting($this->plugin_name, $this->option_name . '_load_stylesheet', array(
+            $this,
+            $this->option_name . '_sanitize_load_stylesheet',
         ));
         register_setting($this->plugin_name, $this->option_name . '_scrolling', array(
             $this,
@@ -420,6 +434,26 @@ class WP_Post_Modal_Admin
             </label>
         </fieldset>
         <a href="https://wp-post-modal.allureprojects.com/modal-css/" target="_blank">See CSS used for basic styling</a>
+    <?php
+    }
+
+
+    /**
+     * Render the checkbox for stylesheet loading
+     *
+     * @since  1.0.0
+     */
+    public function wp_post_modal_load_stylesheet_cb()
+    {
+        $load_stylesheet = get_option($this->option_name . '_load_stylesheet', true);
+    ?>
+        <fieldset>
+            <label>
+                <input type="checkbox" name="<?php echo esc_attr($this->option_name) . '_load_stylesheet' ?>" id="<?php echo esc_attr($this->option_name) . '_load_stylesheet' ?>" value="1" <?php checked($load_stylesheet, '1'); ?> />
+            </label>
+        </fieldset>
+        
+        Deactivate this if you want to use your own stylesheet for the modal.
     <?php
     }
 

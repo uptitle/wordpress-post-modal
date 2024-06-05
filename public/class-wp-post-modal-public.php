@@ -76,8 +76,8 @@ class WP_Post_Modal_Public
          * between the defined hooks and the functions defined in this
          * class.
          */
-
-        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-post-modal-public.css', array(), $this->version, 'all');
+         wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-post-modal-public.css', array(), $this->version, 'all');
+       
     }
 
     /**

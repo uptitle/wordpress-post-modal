@@ -161,17 +161,17 @@ class WP_Post_Modal
 
 		$this->loader->add_filter('plugin_action_links_' . plugin_basename(plugin_dir_path(__DIR__) . $this->plugin_name . '.php'), $plugin_admin, 'add_settings_link');
 
-		$admin_installed_notice = get_option('dismiss_admin_notice_installed');
-		if (empty($admin_installed_notice) || (time() - $admin_installed_notice > 60 * 60 * 24 * 15)) {
-			$this->loader->add_filter('admin_notices', $plugin_admin, 'admin_notice_installed');
-			$this->loader->add_filter('network_admin_notices', $plugin_admin, 'admin_notice_installed');
-		}
+		// $admin_installed_notice = get_option('dismiss_admin_notice_installed');
+		// if (empty($admin_installed_notice) || (time() - $admin_installed_notice > 60 * 60 * 24 * 15)) {
+		// 	$this->loader->add_filter('admin_notices', $plugin_admin, 'admin_notice_installed');
+		// 	$this->loader->add_filter('network_admin_notices', $plugin_admin, 'admin_notice_installed');
+		// }
 
-		$admin_remote_notice = get_option('dismiss_admin_notice_remote');
-		if (empty($admin_remote_notice) || (time() - $admin_installed_notice > 60 * 60 * 24 * 15)) {
-			$this->loader->add_filter('admin_notices', $plugin_admin, 'admin_notice_remote');
-			$this->loader->add_filter('network_admin_notices', $plugin_admin, 'admin_notice_remote');
-		}
+		// $admin_remote_notice = get_option('dismiss_admin_notice_remote');
+		// if (empty($admin_remote_notice) || (time() - $admin_installed_notice > 60 * 60 * 24 * 15)) {
+		// 	$this->loader->add_filter('admin_notices', $plugin_admin, 'admin_notice_remote');
+		// 	$this->loader->add_filter('network_admin_notices', $plugin_admin, 'admin_notice_remote');
+		// }
 
 		if (get_option('wp_post_modal_button', true) !== '1') {
 			$this->loader->add_filter('mce_buttons', $plugin_admin, 'register_custom_mce_buttons');
@@ -203,7 +203,9 @@ class WP_Post_Modal
 
 		$plugin_public = new WP_Post_Modal_Public($this->get_plugin_name(), $this->get_version());
 
-		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+        if (get_option('wp_post_modal_load_stylesheet', true) == '1') {
+			$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+		}
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
 		$this->loader->add_action('wp_footer', $plugin_public, 'modal_wrapper');
