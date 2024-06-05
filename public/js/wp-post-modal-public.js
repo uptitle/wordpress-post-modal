@@ -117,7 +117,7 @@
 
     // Show modal functionality
     function showModal(postLink, external) {
-      scrollPos = window.pageYOffset;
+      scrollPos = window.scrollY;
       if (fromPHP.disableScrolling) $("body, html").addClass("no-scroll");
       $(".modal-wrapper").addClass("show");
       $(".wp-post-modal").addClass("show");
@@ -224,7 +224,7 @@
         }
 
         // When clicking a modal-link
-        $("body").on("click", `.${fromPHP.modalLinkClass}`, function (e) {
+        $("body").on("click", `a.${fromPHP.modalLinkClass}, .${fromPHP.modalLinkClass} > a`, function (e) {
           // Define variables
           var modalContent = $("#modal-content");
           var $this =
