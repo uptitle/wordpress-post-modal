@@ -49,6 +49,7 @@
 
   // Basename function for JS
   function basename(path, suffix) {
+    console.log('path', path, 'suffix', suffix)
     var b = path;
     var lastChar = b.charAt(b.length - 1);
     if (lastChar === "/" || lastChar === "\\") {
@@ -61,6 +62,7 @@
     ) {
       b = b.substr(0, b.length - suffix.length);
     }
+    console.log('b', b)
     return b;
   }
 
