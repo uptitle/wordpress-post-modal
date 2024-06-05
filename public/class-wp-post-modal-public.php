@@ -41,6 +41,7 @@ class WP_Post_Modal_Public
      */
     private $version;
 
+    private $modal_post;
     /**
      * Initialize the class and set its properties.
      *
@@ -179,19 +180,38 @@ class WP_Post_Modal_Public
         $slug = $request['slug'];
 
         // get title by slug
-        $post = get_page_by_path($slug, ARRAY_A, get_post_types());
+        $post = get_page_by_path(basename( untrailingslashit($slug)), OBJECT, get_post_types());
 
-        if (!empty($post['post_password'])) {
+        //write_log(['post',$post]);
+
+        if (!empty($post->post_password)) {
             $response = new WP_Error('post_password_protected', 'Post is password protected', array('status' => 403));
-        } elseif ($post['post_status'] !== "publish") {
+        } elseif ($post->post_status !== "publish") {
             $response = new WP_Error('post_private', 'Post is not published', array('status' => 403));
-        } elseif ($post['post_content'] && $post['post_status'] === "publish") {
+        } elseif ($post->post_content && $post->post_status === "publish") {
 
+            $this->modal_post = $post;
+            $blocks = parse_blocks($post->post_content);
+            //write_log(['blocks',$blocks]);
+            $parsed_blocks = '';
+
+            add_filter('render_block_context', function($context, $parsed_block, $parent_block) { 
+                // Update the $context variable according to your website requirements and return this variable. You can modify the $context variable conditionally too if you want.
+                $context['postId'] = $this->modal_post->ID;
+                $context['postType'] = $this->modal_post->post_type;
+                $context['postTitle'] = $this->modal_post->post_title;
+                return $context; 
+            }, 15, 3);
+
+            foreach( $blocks as $block ) {
+                $parsed_blocks .= apply_filters('the_content', render_block( $block ) );
+            }
+            //write_log(['parsed_blocks',$parsed_blocks]);
             // render shortcodes from Visual Composer
-            $post['post_content'] = apply_filters('the_content', $post['post_content']);
-            $filtered_post = array_intersect_key($post, array_flip(array('post_content')));
-
-            $response = new WP_REST_Response($filtered_post);
+            // $mypost['post_content'] = apply_filters('the_content', $post->post_content);
+            // $filtered_post = array_intersect_key($mypost, array_flip(array('post_content')));
+            //write_log(['$filtered_post',$filtered_post]);
+            $response = new WP_REST_Response(['post_content' => $parsed_blocks]);
         } else {
             $response = new WP_Error('post_empty', 'Post is empty', array('status' => 404));
         }
