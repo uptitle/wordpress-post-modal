@@ -191,6 +191,7 @@ class WP_Post_Modal_Public
         } elseif ($post->post_content && $post->post_status === "publish") {
 
             $this->modal_post = $post;
+            
             $blocks = parse_blocks($post->post_content);
             //write_log(['blocks',$blocks]);
             $parsed_blocks = '';
@@ -199,7 +200,6 @@ class WP_Post_Modal_Public
                 // Update the $context variable according to your website requirements and return this variable. You can modify the $context variable conditionally too if you want.
                 $context['postId'] = $this->modal_post->ID;
                 $context['postType'] = $this->modal_post->post_type;
-                $context['postTitle'] = $this->modal_post->post_title;
                 return $context; 
             }, 15, 3);
 
