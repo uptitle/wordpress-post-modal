@@ -172,12 +172,12 @@ class WP_Post_Modal_Public
     {
         // Visual Composer shortcodes
         include_once ABSPATH . 'wp-admin/includes/plugin.php';
-        if (is_plugin_active('js_composer/js_composer.php')) {
+        if (is_admin() && is_plugin_active('js_composer/js_composer.php')) {
             WPBMap::addAllMappedShortcodes();
         }
 
         // get slug from request
-        $slug = $request['slug'];
+        $slug = sanitize_text_field($request['slug']);
 
         // get title by slug
         $post = get_page_by_path(basename( untrailingslashit($slug)), OBJECT, get_post_types());
