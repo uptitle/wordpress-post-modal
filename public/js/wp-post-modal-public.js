@@ -71,7 +71,7 @@
     return b;
   }
 
-  // Get URL Paramenters
+  // Get URL Parameters
   var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
       sURLVariables = sPageURL.split("&"),
@@ -309,7 +309,7 @@
                 $.get(
                   fromPHP.siteUrl +
                     "/wp-json/wp-post-modal/v1/any-post-type?slug=" +
-                    postSlug,
+                    encodeURIComponent(postSlug),
                   function (response) {
                     $.when(modalContent.html(response.post_content)).done(
                       function () {
